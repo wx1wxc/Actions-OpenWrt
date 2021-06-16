@@ -18,5 +18,5 @@
 git clone https://github.com/destan19/OpenAppFilter package/openappfilter
 git clone https://github.com/xkstudio/luci-app-pptp-server.git package/pptp
 git clone https://github.com/pymumu/luci-app-smartdns.git feeds/luci/applications/luci-app-smartdns
-git clone https://github.com/siryle1213/luci-app-fileassistant.git package/fileassistant
+git clone https://github.com/awesome-openwrt/luci-app-fileassistant package/fileassistant
 git clone https://github.com/tty228/luci-app-serverchan package/serverchan
