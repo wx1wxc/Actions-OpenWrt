@@ -20,6 +20,3 @@ git clone https://github.com/xkstudio/luci-app-pptp-server.git package/pptp
 git clone https://github.com/pymumu/luci-app-smartdns.git feeds/luci/applications/luci-app-smartdns
 git clone https://github.com/awesome-openwrt/luci-app-fileassistant package/fileassistant
 git clone https://github.com/tty228/luci-app-serverchan package/serverchan
-rm -rf package/feeds/kenzok/lua-maxminddb
-git clone https://github.com/jerrykuku/lua-maxminddb package/feeds/kenzok/lua-maxminddb
-git clone https://github.com/jerrykuku/lua-maxminddb package/openwrt-packages/lua-maxminddb
