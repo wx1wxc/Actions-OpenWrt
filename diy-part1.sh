@@ -17,7 +17,7 @@
 #sed -i '$a src-git lienol https://github.com/Lienol/openwrt-package' feeds.conf.default
 git clone https://github.com/destan19/OpenAppFilter package/openappfilter
 git clone https://github.com/xkstudio/luci-app-pptp-server.git package/pptp
-git clone https://github.com/pymumu/luci-app-smartdns.git feeds/luci/applications/luci-app-smartdns
+# git clone https://github.com/pymumu/luci-app-smartdns.git feeds/luci/applications/luci-app-smartdns
 git clone https://github.com/awesome-openwrt/luci-app-fileassistant package/fileassistant
 # git clone https://github.com/tty228/luci-app-serverchan package/serverchan
 git clone https://github.com/jerrykuku/lua-maxminddb feeds/kenzok/lua-maxminddb
