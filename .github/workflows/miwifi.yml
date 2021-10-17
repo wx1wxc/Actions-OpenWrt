@@ -11,8 +11,6 @@
 name: miwifi
 
 on:
-  schedule:
-    - cron: 0 18 * * *   
   repository_dispatch:
   workflow_dispatch:
     inputs:
@@ -20,6 +18,18 @@ on:
         description: 'SSH connection to Actions'
         required: false
         default: 'false'
+        
+#  release:
+#    types: published
+#  push:
+#    branches:
+#      - master
+#    paths:
+#      - 'x86.config'
+  schedule:
+    - cron: 0 16 * * *
+  watch:
+    types: started
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
