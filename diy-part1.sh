@@ -17,3 +17,5 @@
 #echo 'src-git helloworld https://github.com/fw876/helloworld' >>feeds.conf.default
 #echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >>feeds.conf.default
 # git clone https://github.com/wx1wxc/luci-app-fileassistant package/fileassistant
+git clone https://github.com/linkease/istore package/istore
+git clone https://github.com/linkease/istore-ui package/istore-ui
