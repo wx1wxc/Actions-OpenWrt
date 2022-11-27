@@ -15,7 +15,8 @@
 sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' package/lean/default-settings/files/zzz-default-settings #取消系统默认密码
 # sed -i 's/mosdns_neo/mosdns/g' openwrt/feeds/kenzok/luci-app-mosdns/Makefile  #mosdns修复
 # sed -i 's/mosdns_neo/mosdns/g' openwrt/feeds/kenzok/mosdns/Makefile
-rm -rf feeds/packages/net/mosdns && cp -rf feeds/kenzok/mosdns feeds/packages/net/mosdns
-sed -i 's/mosdns-neo/mosdns/g' feeds/kenzok/luci-app-mosdns/Makefile
-sed -i 's/mosdns-neo/mosdns/g' feeds/kenzok/mosdns/Makefile
-sed -i 's/mosdns-neo/mosdns/g' feeds/packages/net/mosdns/Makefile
+
+# rm -rf feeds/packages/net/mosdns && cp -rf feeds/kenzok/mosdns feeds/packages/net/mosdns
+# sed -i 's/mosdns-neo/mosdns/g' feeds/kenzok/luci-app-mosdns/Makefile
+# sed -i 's/mosdns-neo/mosdns/g' feeds/kenzok/mosdns/Makefile
+# sed -i 's/mosdns-neo/mosdns/g' feeds/packages/net/mosdns/Makefile
