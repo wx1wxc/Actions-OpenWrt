@@ -19,5 +19,5 @@
 # git clone https://github.com/wx1wxc/luci-app-fileassistant package/fileassistant
 # git clone https://github.com/linkease/istore package/istore
 # git clone https://github.com/linkease/istore-ui package/istore-ui
-#git clone https://github.com/wx1wxc/luci-app-mosdns package/mosdns
+git clone https://github.com/QiuSimons/openwrt-mos package/mosdns
 #git clone https://github.com/sbwml/v2ray-geodata package/geodata
