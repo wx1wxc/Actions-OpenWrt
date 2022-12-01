@@ -11,10 +11,8 @@
 #
 
 # sed -i 's#192.168.1.1#10.0.0.1#g' package/base-files/files/bin/config_generate #定制默认IP
-# sed -i 's/luci-lib-ipkg/luci-base/g' package/feeds/kenzok/luci-app-store/Makefile
 sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' package/lean/default-settings/files/zzz-default-settings #取消系统默认密码
-# sed -i 's/mosdns_neo/mosdns/g' openwrt/feeds/kenzok/luci-app-mosdns/Makefile  #mosdns修复
-# sed -i 's/mosdns_neo/mosdns/g' openwrt/feeds/kenzok/mosdns/Makefile
+
 
 rm -rf feeds/helloworld/v2ray-geodata && cp -rf package/v2ray-geodata feeds/helloworld/v2ray-geodata
 rm -rf feeds/small/v2ray-geodata && cp -rf package/v2ray-geodata feeds/small/v2ray-geodata
