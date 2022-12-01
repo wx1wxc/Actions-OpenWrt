@@ -22,3 +22,4 @@ rm -rf feeds/packages/net/mosdns && cp -rf feeds/kenzok/mosdns feeds/packages/ne
 sed -i 's/mosdns-neo/mosdns/g' feeds/kenzok/luci-app-mosdns/Makefile
 sed -i 's/mosdns-neo/mosdns/g' feeds/kenzok/mosdns/Makefile
 sed -i 's/mosdns-neo/mosdns/g' feeds/packages/net/mosdns/Makefile
+sed -i 's/5.15/4.19/g' target/linux/rockchip/Makefile
