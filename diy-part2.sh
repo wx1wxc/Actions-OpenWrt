@@ -20,4 +20,4 @@ rm -rf feeds/packages/net/mosdns && cp -rf feeds/kenzok/mosdns feeds/packages/ne
 sed -i 's/mosdns-neo/mosdns/g' feeds/kenzok/luci-app-mosdns/Makefile
 sed -i 's/mosdns-neo/mosdns/g' feeds/kenzok/mosdns/Makefile
 sed -i 's/mosdns-neo/mosdns/g' feeds/packages/net/mosdns/Makefile
-sed -i '10c KERNEL_PATCHVER:=4.19' target/linux/rockchip/Makefile     #R5s 定制内核
+# sed -i '10c KERNEL_PATCHVER:=4.19' target/linux/rockchip/Makefile     #R5s 定制内核
