@@ -27,7 +27,7 @@ on:
 #    paths:
 #      - 'miwifi.config'
   schedule:
-    - cron: 0 16 0/15 * *
+    - cron: 0 13 1/15 * *
   watch:
     types: started
 
