@@ -25,9 +25,9 @@ on:
 #    branches:
 #      - master
 #    paths:
-#      - 'x86.config'
+#      - 'miwifi.config'
   schedule:
-    - cron: 0 16 * * *
+    - cron: 0 16 0/15 * *
   watch:
     types: started
 
