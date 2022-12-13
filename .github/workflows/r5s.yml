@@ -27,7 +27,7 @@ on:
 #    paths:
 #      - 'r5s.config'
   schedule:
-    - cron: 0 16 * * *
+    - cron: 0 16 1/15 * *
   watch:
     types: started
 
