@@ -14,8 +14,8 @@
 sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' package/lean/default-settings/files/zzz-default-settings #取消系统默认密码
 
 
-rm -rf feeds/helloworld/v2ray-geodata && cp -rf package/v2ray-geodata feeds/helloworld/v2ray-geodata
-rm -rf feeds/small/v2ray-geodata && cp -rf package/v2ray-geodata feeds/small/v2ray-geodata
+# rm -rf feeds/helloworld/v2ray-geodata && cp -rf package/v2ray-geodata feeds/helloworld/v2ray-geodata
+# rm -rf feeds/small/v2ray-geodata && cp -rf package/v2ray-geodata feeds/small/v2ray-geodata
 # rm -rf feeds/packages/net/mosdns && cp -rf feeds/kenzok/mosdns feeds/packages/net/mosdns
 # sed -i 's/mosdns-neo/mosdns/g' feeds/kenzok/luci-app-mosdns/Makefile
 # sed -i 's/mosdns-neo/mosdns/g' feeds/kenzok/mosdns/Makefile
