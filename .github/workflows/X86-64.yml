@@ -121,9 +121,26 @@ jobs:
         [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
         echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
-    - name: Check space usage
+    - name: 清理磁盘空间
       if: (!cancelled())
-      run: df -hT
+      run: |
+        echo "清理之前："
+        df -hT
+        mkdir openwrt-armvirt
+        mv openwrt/bin/targets/*/*/*.tar.gz openwrt-armvirt/
+        echo -e "\n"
+        echo "列出空间占用前10的目录或文件："
+        sudo du -h --max-depth=1 /workdir/openwrt |sort -nr | head -10
+        rm -rf /workdir/openwrt/*
+        echo -e "\n"
+        echo "清理之后："
+        df -hT
+        echo -e "\n"
+        echo "当前路径文件"
+        ls -l
+        echo -e "\n"
+        echo "列出空间占用前10的目录或文件："
+        sudo du -h --max-depth=1 /workdir/openwrt |sort -nr | head -10
 
     - name: Upload bin directory
       uses: actions/upload-artifact@main
@@ -139,7 +156,7 @@ jobs:
         cd openwrt/bin/targets/*/*
         rm -rf packages
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-        echo "{status}={success}" >> $GITHUB_OUTPUT
+        echo "::set-output name=status::success"
 
     - name: Upload firmware directory
       uses: actions/upload-artifact@main
