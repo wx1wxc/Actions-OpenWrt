@@ -20,3 +20,4 @@
 
 # git clone https://github.com/QiuSimons/openwrt-mos package/mosdns
 # git clone https://github.com/sbwml/v2ray-geodata package/geodata
+wget -P ./dl https://sources.immortalwrt.org/ipt2socks-1.1.3.tar.gz
