@@ -19,3 +19,4 @@ jobs:
         run: |
           echo "Free space:"
           df -h
+          df -hT $PWD
