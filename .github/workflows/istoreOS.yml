@@ -33,7 +33,7 @@ on:
 
 env:
   REPO_URL: https://github.com/istoreos/istoreos
-  REPO_BRANCH: master
+  #REPO_BRANCH: master
   FEEDS_CONF: feeds.conf
   CONFIG_FILE: .config
   DIY_P1_SH: diy-part1.sh
@@ -55,8 +55,6 @@ jobs:
           - istoreos-22.03
           # - istoreos-23.05
         ARCHITECTURE:
-          - rk33xx
-          - rk35xx
           - x86
         os:
           - ubuntu-22.04
