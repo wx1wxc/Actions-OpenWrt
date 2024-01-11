@@ -57,7 +57,7 @@ jobs:
         ARCHITECTURE:
           - x86
         os:
-          - ubuntu-22.04
+          - ubuntu-20.04
 
       fail-fast: false
 
