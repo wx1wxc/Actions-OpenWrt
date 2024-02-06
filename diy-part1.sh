@@ -23,14 +23,3 @@
 # wget -P ./dl https://sources.immortalwrt.org/ipt2socks-1.1.3.tar.gz
 
 git clone https://github.com/sirpdboy/netspeedtest.git package/netspeedtest
-git clone https://github.com/kenzok8/small-package/adguardhome package/adguardhome
-git clone https://github.com/kenzok8/small-package/filebrowser package/filebrowser
-git clone https://github.com/kenzok8/small-package/luci-app-adguardhome package/luci-app-adguardhome
-git clone https://github.com/kenzok8/small-package/luci-app-argone-config package/luci-app-argone-config
-git clone https://github.com/kenzok8/small-package/luci-app-dockerman package/luci-app-dockerman
-git clone https://github.com/kenzok8/small-package/luci-app-fileassistant package/luci-app-fileassistant
-git clone https://github.com/kenzok8/small-package/luci-app-mosdns package/luci-app-mosdns
-git clone https://github.com/kenzok8/small-package/luci-app-openclash package/luci-app-openclash
-git clone https://github.com/kenzok8/small-package/luci-app-wechatpush package/luci-app-wechatpush
-git clone https://github.com/kenzok8/small-package/luci-theme-argone package/luci-theme-argone
-git clone https://github.com/kenzok8/small-package/mosdns package/mosdns
