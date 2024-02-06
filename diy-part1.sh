@@ -33,4 +33,4 @@ wget https://github.com/kenzok8/small-package/tree/main/luci-app-mosdns package/
 wget https://github.com/kenzok8/small-package/tree/main/luci-app-openclash package/luci-app-openclash
 wget https://github.com/kenzok8/small-package/tree/main/luci-app-wechatpush package/luci-app-wechatpush
 wget https://github.com/kenzok8/small-package/tree/main/luci-theme-argone package/luci-theme-argone
-wget https://github.com/kenzok8/small-package/tree/main/package/mosdns
+wget https://github.com/kenzok8/small-package/tree/main/package/mosdns package/mosdns
