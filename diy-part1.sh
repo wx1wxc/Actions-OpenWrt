@@ -33,4 +33,4 @@ git clone https://github.com/kenzok8/openwrt-packages/tree/master/luci-app-mosdn
 git clone https://github.com/kenzok8/openwrt-packages/tree/master/luci-app-openclash package/luci-app-openclash
 git clone https://github.com/kenzok8/openwrt-packages/tree/master/luci-app-wechatpush package/luci-app-wechatpush
 git clone https://github.com/kenzok8/openwrt-packages/tree/master/luci-theme-argone package/luci-theme-argone
-git clone https://github.com/kenzok8/openwrt-packages/tree/master/mosdns package/mosdns
+#git clone https://github.com/kenzok8/openwrt-packages/tree/master/mosdns package/mosdns
