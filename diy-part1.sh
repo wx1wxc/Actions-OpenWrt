@@ -23,14 +23,14 @@
 # wget -P ./dl https://sources.immortalwrt.org/ipt2socks-1.1.3.tar.gz
 
 git clone https://github.com/sirpdboy/netspeedtest.git package/netspeedtest
-wget https://github.com/kenzok8/small-package/tree/main/adguardhome package/adguardhome
-wget https://github.com/kenzok8/small-package/tree/main/filebrowser package/filebrowser
-wget https://github.com/kenzok8/small-package/tree/main/luci-app-adguardhome package/luci-app-adguardhome
-wget https://github.com/kenzok8/small-package/tree/main/luci-app-argone-config package/luci-app-argone-config
-wget https://github.com/kenzok8/small-package/tree/main/luci-app-dockerman package/luci-app-dockerman
-wget https://github.com/kenzok8/small-package/tree/main/luci-app-fileassistant package/luci-app-fileassistant
-wget https://github.com/kenzok8/small-package/tree/main/luci-app-mosdns package/luci-app-mosdns
-wget https://github.com/kenzok8/small-package/tree/main/luci-app-openclash package/luci-app-openclash
-wget https://github.com/kenzok8/small-package/tree/main/luci-app-wechatpush package/luci-app-wechatpush
-wget https://github.com/kenzok8/small-package/tree/main/luci-theme-argone package/luci-theme-argone
-wget https://github.com/kenzok8/small-package/tree/main/package/mosdns package/mosdns
+wget https://github.com/kenzok8/small-package/adguardhome package/adguardhome
+wget https://github.com/kenzok8/small-package/filebrowser package/filebrowser
+wget https://github.com/kenzok8/small-package/luci-app-adguardhome package/luci-app-adguardhome
+wget https://github.com/kenzok8/small-package/luci-app-argone-config package/luci-app-argone-config
+wget https://github.com/kenzok8/small-package/luci-app-dockerman package/luci-app-dockerman
+wget https://github.com/kenzok8/small-package/luci-app-fileassistant package/luci-app-fileassistant
+wget https://github.com/kenzok8/small-package/luci-app-mosdns package/luci-app-mosdns
+wget https://github.com/kenzok8/small-package/luci-app-openclash package/luci-app-openclash
+wget https://github.com/kenzok8/small-package/luci-app-wechatpush package/luci-app-wechatpush
+wget https://github.com/kenzok8/small-package/luci-theme-argone package/luci-theme-argone
+wget https://github.com/kenzok8/small-package/mosdns package/mosdns
