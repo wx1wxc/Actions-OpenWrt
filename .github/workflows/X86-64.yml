@@ -85,6 +85,7 @@ jobs:
       run: cd openwrt && ./scripts/feeds update -a
            rm -rf feeds/luci/applications/luci-app-mosdns
            rm -rf feeds/luci/applications/luci-app-serverchan
+           rm -rf feeds/packages/v2dat
            rm -rf feeds/packages/net/{alist,adguardhome,smartdns}
            rm -rf feeds/packages/lang/golang
            git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
