@@ -23,3 +23,5 @@
 # wget -P ./dl https://sources.immortalwrt.org/ipt2socks-1.1.3.tar.gz
 
 #git clone https://github.com/sirpdboy/netspeedtest.git package/netspeedtest
+
+git clone https://github.com/destan19/OpenAppFilter.git package/destan19/OpenAppFilter
