@@ -94,6 +94,14 @@ jobs:
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
 
+    - name: Remove conflicting packages
+      run: |
+        cd openwrt
+        # 删除冲突的 socat 和 firewall4 包
+        rm -f build_dir/target-x86_64_musl/root-x86/etc/config/socat
+        ./scripts/feeds uninstall firewall4
+        ./scripts/feeds uninstall socat
+
     - name: Download package
       id: package
       run: |
