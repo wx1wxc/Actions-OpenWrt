@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: X86-64
+name: X86-64-lede
 
 on:
   repository_dispatch:
