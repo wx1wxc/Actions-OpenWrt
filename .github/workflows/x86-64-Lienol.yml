@@ -16,6 +16,9 @@ on:
         default: 'false'
 
 env:
+  CONFIG_FILE: x86-64+.config
+  DIY_P1_SH: diy-part1.sh
+  DIY_P2_SH: diy-part2.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: false
@@ -97,7 +100,7 @@ jobs:
         rm -rf feeds/smpackage/luci-theme-design && git clone -b js --single-branch https://github.com/kenzok78/luci-theme-design feeds/smpackage/luci-theme-design
         sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
         ./scripts/feeds update -a && ./scripts/feeds install -a
-        cp -f x86-64+.config .config && make defconfig
+        
         
     - name: Download package
       working-directory: ./openwrt
