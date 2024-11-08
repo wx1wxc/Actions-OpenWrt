@@ -4,7 +4,7 @@
 # https://github.com/P3TERX/Actions-OpenWrt
 # Description: Build OpenWrt using GitHub Actions
 
-name: X86-64_openwrt
+name: X86-64_Lienol
 
 on:
   repository_dispatch:
@@ -20,14 +20,13 @@ on:
     types: started
 
 env:
-  REPO_URL: https://git.openwrt.org/openwrt/openwrt.git
-  REPO_BRANCH: v23.05.3
-  FEEDS_CONF: feeds.conf.default
+  REPO_URL: https://github.com/Lienol/openwrt
+  REPO_BRANCH: v23.05
   CONFIG_FILE: x86-64+.config
   DIY_P1_SH: diy-part1.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
-  UPLOAD_RELEASE: true
+  UPLOAD_RELEASE: false
   TZ: Asia/Shanghai
 
 jobs:
@@ -56,26 +55,36 @@ jobs:
       working-directory: /workdir
       run: |
         df -hT $PWD
-        git clone $REPO_URL -b $REPO_BRANCH openwrt
+        git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-
-    - name: Load custom feeds
-      run: |
-        [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
-        chmod +x $DIY_P1_SH
         cd openwrt
-        $GITHUB_WORKSPACE/$DIY_P1_SH
+        sed -i '$a src-git smpackage https://github.com/kenzok8/small-package' feeds.conf.default
 
     - name: Update feeds
-      run: cd openwrt && ./scripts/feeds update -a
-           rm -rf feeds/luci/applications/luci-app-mosdns && rm -rf feeds/packages/net/{alist,adguardhome,smartdns}
-           rm -rf feeds/luci/applications/luci-app-serverchan
-           rm -rf feeds/packages/lang/golang
-           rm -rf feeds/packages/v2dat
-           git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
-
-    - name: Install feeds
-      run: cd openwrt && ./scripts/feeds install -a
+      working-directory: ./openwrt
+      run: |
+        ./scripts/feeds update -a
+        
+    - name: Defconfig ${{matrix.target}}
+      env:
+        CONFIG_FILE: '${{matrix.target}}.config'
+      run: |
+        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        chmod +x ./customize.sh && ./customize.sh
+        cd openwrt
+        rm -rf feeds/packages/lang/golang
+        git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
+        rm -rf feeds/smpackage/{base-files,dnsmasq,firewall*,fullconenat,libnftnl,nftables,ppp,opkg,ucl,upx,vsftpd-alt,miniupnpd-iptables,wireless-regdb}
+        rm -rf feeds/luci/themes/luci-theme-argon && rm -rf feeds/other/{luci-app-adguardhome,luci-app-dockerman}
+        rm -rf feeds/lienol/luci-app-fileassistant && rm -rf feeds/packages/net/{adguardhome,smartdns}
+        cp -f feeds/smpackage/.github/diy/zzz-default-settings package/default-settings/files/zzz-default-settings
+        cp -f feeds/smpackage/.github/diy/banner package/base-files/files/etc/banner
+        patch -p1 < "feeds/smpackage/.github/diy/patches/0004-luci-mod-status-firewall-disable-legacy-firewall-rul.patch"
+        rm -rf feeds/smpackage/luci-theme-design && git clone -b js --single-branch https://github.com/kenzok78/luci-theme-design feeds/smpackage/luci-theme-design
+        sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
+        sed -i "s/%D %V, %C/openwrt $(date +'%m.%d') by kenzo/g" package/base-files/files/etc/banner
+        ./scripts/feeds update -a && ./scripts/feeds install -a
+        cp -f feeds/smpackage/.github/diy/${{matrix.target}}.config .config && make defconfig
 
     - name: Load custom configuration
       run: |
