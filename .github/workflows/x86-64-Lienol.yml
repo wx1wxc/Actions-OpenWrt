@@ -1,8 +1,12 @@
-#=================================================
+#
+# Copyright (c) 2019-2020 P3TERX <https://p3terx.com>
+#
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
+# https://github.com/P3TERX/Actions-OpenWrt
 # Description: Build OpenWrt using GitHub Actions
-# Lisence: MIT
-# Author: kenzo
-#=================================================
+#
 
 name: Lienol
 
@@ -11,37 +15,39 @@ on:
   workflow_dispatch:
     inputs:
       ssh:
-        description: 'ssh'
+        description: 'SSH connection to Actions'
         required: false
         default: 'false'
+        
+#  release:
+#    types: published
+#  push:
+#    branches:
+#      - master
+#    paths:
+#      - 'x86.config'
+  schedule:
+    - cron: 0 17 1,15 * *
+  watch:
+    types: started
 
 env:
+  REPO_URL: https://github.com/Lienol/openwrt
+  REPO_BRANCH: 23.05
+  FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: x86-64+.config
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
-  UPLOAD_COWTRANSFER: false
-  UPLOAD_WETRANSFER: false
   UPLOAD_RELEASE: true
-  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-  REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-  REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
-  DOCKER_ID: ${{ secrets.DOCKER_ID }}
-  DOCKER_PASSWD: ${{ secrets.DOCKER_PASSWD }}
   TZ: Asia/Shanghai
-
+ 
+   
 jobs:
-  merge:
-    runs-on: Ubuntu-22.04
-    if: github.event.repository.owner.id == github.event.sender.id
+  build:
+    runs-on: ubuntu-22.04
 
-    name: Build ${{matrix.target}}
-    strategy:
-      fail-fast: false
-      matrix:
-        target: [Lienol]
-    
     steps:
     - name: Checkout
       uses: actions/checkout@main
@@ -53,67 +59,58 @@ jobs:
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
         sudo docker image prune --all --force
         sudo -E apt-get -qq update
-        sudo -E apt-get -qq install ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libfuse-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev libssl-dev libtool lrzsz mkisofs msmtp ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pyelftools python3-setuptools qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev rename
+        sudo -E apt-get -qq install ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libfuse-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev libssl-dev libtool lrzsz mkisofs msmtp ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pyelftools python3-setuptools qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
-        
-    - name: Get current date
-      id: date
-      run: |
-        echo "date=$(date +'%Y.%m.%d-%H%M')" >> $GITHUB_ENV
-        echo "date2=$(date +'%m/%d %Y')" >> $GITHUB_ENV
-        echo "date3=$(date +'%m.%d')" >> $GITHUB_ENV
-        echo "DOCKERTAG=${{ secrets.DOCKER_ID }}/openwrt-6p:latest" >> $GITHUB_ENV
-        VERSION="$(echo "${{github.event.action}}" | grep -Eo " [0-9.]+" | sed -e 's/ //')" || true
-        [ "$VERSION" ] && echo "VERSION=$VERSION" >> $GITHUB_ENV || echo "VERSION=$(date +'%m.%d')" >> $GITHUB_ENV         
-        
+        sudo mkdir -p /workdir
+        sudo chown $USER:$GROUPS /workdir
+
     - name: Clone source code
-      env: 
-        REPO_URL: https://github.com/Lienol/openwrt
-        REPO_BRANCH: 23.05
+      working-directory: /workdir
       run: |
-        git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+        df -hT $PWD
+        git clone $REPO_URL -b $REPO_BRANCH openwrt
+        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+
+    - name: Load custom feeds
+      run: |
+        chmod +x $DIY_P1_SH
         cd openwrt
         sed -i '$a src-git smpackage https://github.com/kenzok8/small-package' feeds.conf.default
+        $GITHUB_WORKSPACE/$DIY_P1_SH
 
     - name: Update feeds
-      working-directory: ./openwrt
+      run: cd openwrt && ./scripts/feeds update -a
+
+    - name: Remove 重复 packages
       run: |
-        ./scripts/feeds update -a
-        
-    - name: Defconfig ${{matrix.target}}
-      env:
-        CONFIG_FILE: '${{matrix.target}}.config'
-      run: |
-        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-        chmod +x ./diy-part1.sh && ./diy-part1.sh
         cd openwrt
-        rm -rf feeds/packages/lang/golang
-        git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
-        rm -rf feeds/smpackage/{base-files,dnsmasq,firewall*,fullconenat,libnftnl,nftables,ppp,opkg,ucl,upx,vsftpd-alt,miniupnpd-iptables,wireless-regdb}
-        rm -rf feeds/luci/themes/luci-theme-argon && rm -rf feeds/other/{luci-app-adguardhome,luci-app-dockerman}
-        rm -rf feeds/lienol/luci-app-fileassistant && rm -rf feeds/packages/net/{adguardhome,smartdns}
-        cp -f feeds/smpackage/.github/diy/zzz-default-settings package/default-settings/files/zzz-default-settings
-        cp -f feeds/smpackage/.github/diy/banner package/base-files/files/etc/banner
-        patch -p1 < "feeds/smpackage/.github/diy/patches/0004-luci-mod-status-firewall-disable-legacy-firewall-rul.patch"
-        rm -rf feeds/smpackage/luci-theme-design && git clone -b js --single-branch https://github.com/kenzok78/luci-theme-design feeds/smpackage/luci-theme-design
-        sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
-        ./scripts/feeds update -a && ./scripts/feeds install -a
-        
-        
+        rm -rf feeds/smpackage/{base-files,dnsmasq,firewall*,fullconenat,libnftnl,nftables,ppp,opkg,ucl,upx,vsftpd*,miniupnpd-iptables,wireless-regdb}
+
+    - name: Install feeds
+      run: cd openwrt && ./scripts/feeds install -a
+
     - name: Download package
-      working-directory: ./openwrt
+      id: package
       run: |
-        make download -j$(nproc)
+        cd openwrt
+        make defconfig
+        make download -j8
+        find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
     - name: Compile the firmware
-      working-directory: ./openwrt
+      id: compile
       run: |
-        echo -e "$(($(nproc)+1)) thread compile"
-        make -j$(($(nproc)+1)) || make -j1 V=s     
-     
+        cd openwrt
+        echo -e "$(nproc) thread compile"
+        make -j$(nproc) || make -j1 || make -j1 V=s
+        echo "status=success" >> $GITHUB_OUTPUT
+        grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
+        [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
+        echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+
     - name: Check space usage
       if: (!cancelled())
       run: df -hT
@@ -129,114 +126,48 @@ jobs:
       id: organize
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
-        mkdir firmware
-        mv -f openwrt/bin/targets/*/*/{*combined*,*sysupgrade*} ./firmware/ 2>/dev/null || true
-        cp openwrt/.config  ./firmware/${{matrix.target}}.config
-        cp openwrt/build_dir/target-*/linux-*/linux-*/.config ./firmware/${{matrix.target}}_kernel.config
-        cd firmware
-        echo "v${{ env.date2 }}" > version.txt
-        md5=$((md5sum *squashfs-sysupgrade* || md5sum *squashfs-combined-efi*) | awk '{print $1}') 2>/dev/null
-        echo $md5 >> version.txt
-        rename -v "s/^openwrt/${{ env.VERSION }}-openwrt/" * || true
-        rename -v "s/friendlyarm_//" *gz || true
-        echo $md5 >> version.txt
-        echo ${{matrix.target}} >> version.txt     
-        rm -rf sha256sums
+        cd openwrt/bin/targets/*/*
+        rm -rf packages
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-        
-    - name: Deploy imagebuilder to server
-      uses: easingthemes/ssh-deploy@main
-      with:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        ARGS: "-avzr --exclude="
-        SOURCE: firmware/
-        REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-        REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
-        REMOTE_USER: root
-        TARGET: "/www/wwwroot/${{ secrets.REMOTE_HOST }}/op/firmware/${{matrix.target}}/"         
-      
+        echo "status=success" >> $GITHUB_OUTPUT
+
     - name: Upload firmware directory
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: ${{ env.date3 }}_${{matrix.target}}
+        name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
-        
-    - name: Set Up Docker Buildx
-      uses: docker/setup-buildx-action@master
-      if: env.DOCKER_ID && env.DOCKER_PASSWD
-
-    - name: Login To DockerHub
-      uses: docker/login-action@master
-      if: env.DOCKER_ID && env.DOCKER_PASSWD
-      with:
-        username: ${{ secrets.DOCKER_ID }}
-        password: ${{ secrets.DOCKER_PASSWD }}
-        
-    - name: Build and push docker image
-      uses: docker/build-push-action@master
-      continue-on-error: true
-      if: env.DOCKER_ID && env.DOCKER_PASSWD && ! contains(github.event.action, 'noser')
-      with:
-        platforms: ${{ env.ARCH }}
-        file: Dockerfile
-        context: .
-        push: true
-        tags: |
-          ${{ secrets.DOCKER_ID }}/openwrt-6p:${{matrix.target}}
-          ${{ env.DOCKERTAG }}        
-
-    - name: Upload firmware to cowtransfer
-      id: cowtransfer
-      if: steps.organize.outputs.status == 'success' && env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
-      run: |
-        curl -fsSL git.io/file-transfer | sh
-        ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
-        echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https)"
-        echo "url=$(cat cowtransfer.log | grep https | cut -f3 -d" ")" >> $GITHUB_OUTPUT
-
-    - name: Upload firmware to WeTransfer
-      id: wetransfer
-      if: steps.organize.outputs.status == 'success' && env.UPLOAD_WETRANSFER == 'true' && !cancelled()
-      run: |
-        curl -fsSL git.io/file-transfer | sh
-        ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
-        echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
-        echo "url=$(cat wetransfer.log | grep https | cut -f3 -d" ")" >> $GITHUB_OUTPUT
 
     - name: Generate release tag
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
-        echo -e "墙内外加速下载 🎈:\n" >> release.txt
-        echo -e "[kenzo] (https://${{ secrets.REMOTE_HOST }}/op/firmware/${{matrix.target}})\n" >> release.txt
+        echo "release_tag=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_OUTPUT
         touch release.txt
-        [ $UPLOAD_COWTRANSFER = true ] && echo "🔗 [Cowtransfer](${{ steps.cowtransfer.outputs.url }})" >> release.txt
-        [ $UPLOAD_WETRANSFER = true ] && echo "🔗 [WeTransfer](${{ steps.wetransfer.outputs.url }})" >> release.txt
+        [ ${UPLOAD_GOFILE} = true && ${{ steps.gofile.outputs.url }} ] && echo "🔗 [GoFile](${{ steps.gofile.outputs.url }})" >> release.txt
         echo "status=success" >> $GITHUB_OUTPUT
 
     - name: Upload firmware to release
       uses: softprops/action-gh-release@master
       if: steps.tag.outputs.status == 'success' && !cancelled()
       env:
-        GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        files: "${{ env.FIRMWARE }}/*"
-        name: ${{ env.date2 }} ${{matrix.target}}
-        tag_name: ${{ env.date }}_${{matrix.target}}
+        tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
+        files: ${{ env.FIRMWARE }}/*
 
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@main
       with:
-        retain_days: 1
-        keep_minimum_runs: 0
+        retain_days: 0
+        keep_minimum_runs: 2
 
     - name: Remove old Releases
       uses: dev-drprasad/delete-older-releases@master
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
-        keep_latest: 6
+        keep_latest: 3
         delete_tags: true
       env:
-        GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
