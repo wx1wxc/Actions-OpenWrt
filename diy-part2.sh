@@ -11,7 +11,7 @@
 #
 
 # sed -i 's#192.168.1.1#192.168.2.1#g' package/base-files/files/bin/config_generate #定制默认IP
-sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' package/lean/default-settings/files/zzz-default-settings #取消系统默认密码
+#sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' package/lean/default-settings/files/zzz-default-settings #取消系统默认密码
 
 
 # rm -rf feeds/helloworld/v2ray-geodata && cp -rf package/v2ray-geodata feeds/helloworld/v2ray-geodata
